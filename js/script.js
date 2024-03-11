@@ -106,3 +106,5 @@ camera.position.z = 5;
 
 // Start animation loop
 update(0);
+
+//test
