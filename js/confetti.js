@@ -1,10 +1,7 @@
 // confetti.js
 import * as THREE from '/build/three.module.js';
 
-export function generateConfetti(scene) {
-
-    // Adjust confetti generation based on density value
-    var numConfetti = Math.floor(100 * Math.random());
+export function generateConfetti(scene, density, shapeEnabled) {
 
     // Function to generate a random color
     function getRandomColor() {
@@ -12,24 +9,28 @@ export function generateConfetti(scene) {
         return new THREE.Color(randomColor);
     }
 
-    // Function to choose a random shape geometry
-    function chooseShape(x, y, z) {
+    // Function to choose a random shape geometry based on enabled shapes
+    function chooseShape() {
         var shapes = [
-            new THREE.BoxGeometry(x, y, z),
-            new THREE.SphereGeometry(1, 32, 32),
-            new THREE.CylinderGeometry(1, 1, 2, 32),
-            new THREE.CapsuleGeometry(1, 1, 4, 8),
-            new THREE.CircleGeometry(5, 32),
-            new THREE.ConeGeometry(x, y, z),
-            new THREE.DodecahedronGeometry(),
-            new THREE.IcosahedronGeometry(),
-            new THREE.OctahedronGeometry(),
-            new THREE.PlaneGeometry(x, y),
-            new THREE.RingGeometry(),
-            new THREE.TetrahedronGeometry(),
-            new THREE.TorusGeometry(),
-            new THREE.TorusKnotGeometry(),
-        ];
+            shapeEnabled[0] ? new THREE.BoxGeometry() : null,
+            shapeEnabled[1] ? new THREE.SphereGeometry() : null,
+            shapeEnabled[2] ? new THREE.CylinderGeometry() : null,
+            shapeEnabled[3] ? new THREE.CapsuleGeometry() : null,
+            shapeEnabled[4] ? new THREE.CircleGeometry() : null,
+            shapeEnabled[5] ? new THREE.ConeGeometry() : null,
+            shapeEnabled[6] ? new THREE.DodecahedronGeometry() : null,
+            shapeEnabled[7] ? new THREE.IcosahedronGeometry() : null,
+            shapeEnabled[8] ? new THREE.OctahedronGeometry() : null,
+            shapeEnabled[9] ? new THREE.PlaneGeometry() : null,
+            shapeEnabled[10] ? new THREE.RingGeometry() : null,
+            shapeEnabled[11] ? new THREE.TetrahedronGeometry() : null,
+            shapeEnabled[12] ? new THREE.TorusGeometry() : null,
+            shapeEnabled[13] ? new THREE.TorusKnotGeometry() : null,
+        ].filter(geometry => geometry !== null);
+
+        if (shapes.length === 0) {
+            return null;
+        }
 
         var chosenShape = Math.floor(Math.random() * shapes.length);
 
@@ -37,18 +38,21 @@ export function generateConfetti(scene) {
     }
 
     // Generate confetti
-    for (let i = 0; i < numConfetti; i++) {
+    for (let i = 0; i < density; i++) { // Use density to control number of confetti generated
         // Create and shoot confetti
-        var confettiGeometry = chooseShape(Math.random() * 0.5, Math.random() * 0.5, Math.random() * 0.5);
+        var confettiGeometry = chooseShape();
+        if (!confettiGeometry) {
+            break; // No enabled shapes
+        }
         var confettiMaterial = new THREE.MeshBasicMaterial({ color: getRandomColor() });
         var confetti = new THREE.Mesh(confettiGeometry, confettiMaterial);
-        confetti.position.set((Math.random()-0.5)*500, (Math.random()*50), -50);
-        confetti.velocity = new THREE.Vector3(0, -0.2, 0);
+        confetti.position.set((Math.random() - 0.5) * 500, (Math.random() * 10) + 20, -20);
+        confetti.velocity = new THREE.Vector3(0, -10, 0);
 
-        confetti.rotation.set(
-            Math.random() * Math.PI * 2, // Random rotation around x-axis
-            Math.random() * Math.PI * 2, // Random rotation around y-axis
-            Math.random() * Math.PI * 2  // Random rotation around z-axis
+        confetti.initialRotation = new THREE.Vector3(
+            Math.random() * Math.PI * 2,
+            Math.random() * Math.PI * 2,
+            Math.random() * Math.PI * 2
         );
 
         scene.add(confetti);
