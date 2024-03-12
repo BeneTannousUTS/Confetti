@@ -44,7 +44,7 @@ export function generateConfetti(scene, density, shapeEnabled) {
         if (!confettiGeometry) {
             break; // No enabled shapes
         }
-        var confettiMaterial = new THREE.MeshBasicMaterial({ color: getRandomColor() });
+        var confettiMaterial = new THREE.MeshLambertMaterial({ color: getRandomColor() });
         var confetti = new THREE.Mesh(confettiGeometry, confettiMaterial);
         confetti.position.set((Math.random() - 0.5) * 500, (Math.random() * 10) + 20, -20);
         confetti.velocity = new THREE.Vector3(0, -10, 0);

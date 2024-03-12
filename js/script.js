@@ -15,6 +15,17 @@ var ratio = window.innerWidth / window.innerHeight;
 // Create the perspective camera
 var camera = new THREE.PerspectiveCamera(75, ratio, 0.1, 1000);
 
+// Create lighting
+const amblight = new THREE.AmbientLight( new THREE.Color(1,1,1), 0.5);
+scene.add(amblight);
+
+const spotlight = new THREE.SpotLight( new THREE.Color(1,1,1));
+spotlight.position.set( 0, 100, 50 );
+spotlight.castShadow = true;
+
+scene.add( spotlight );
+
+
 // Manage Confetti properties
 var density = { Density: 1 };
 var spin = { Spin_Speed: 1 };
@@ -88,9 +99,9 @@ function update(currentTime) {
                 scene.remove(object);
             }
 
-            object.rotation.x += deltaTime * Math.PI * spin.Spin_Speed * Math.random();
-            object.rotation.y += deltaTime * Math.PI * spin.Spin_Speed * Math.random();
-            object.rotation.z += deltaTime * Math.PI * spin.Spin_Speed * Math.random();
+            object.rotation.x += deltaTime * Math.PI * (spin.Spin_Speed * Math.random());
+            object.rotation.y += deltaTime * Math.PI * (spin.Spin_Speed * Math.random());
+            object.rotation.z += deltaTime * Math.PI * (spin.Spin_Speed * Math.random());
         }
     });
 
@@ -103,6 +114,20 @@ function update(currentTime) {
 
 // Camera setup
 camera.position.z = 5;
+
+//this fucntion is called when the window is resized
+var MyResize = function ( )
+{
+  var width = window.innerWidth;
+  var height = window.innerHeight;
+  renderer.setSize(width,height);
+  camera.aspect = width/height;
+  camera.updateProjectionMatrix();
+  renderer.render(scene,camera);
+};
+
+//link the resize of the window to the update of the camera
+window.addEventListener( 'resize', MyResize);
 
 // Start animation loop
 update(0);
