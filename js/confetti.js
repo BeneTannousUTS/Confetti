@@ -39,14 +39,14 @@ export function generateConfetti(scene, density, shapeEnabled) {
 
     // Generate confetti
     for (let i = 0; i < density; i++) { // Use density to control number of confetti generated
-        // Create and shoot confetti
+        // Create confetti
         var confettiGeometry = chooseShape();
         if (!confettiGeometry) {
             break; // No enabled shapes
         }
         var confettiMaterial = new THREE.MeshLambertMaterial({ color: getRandomColor() });
         var confetti = new THREE.Mesh(confettiGeometry, confettiMaterial);
-        confetti.position.set((Math.random() - 0.5) * 500, (Math.random() * 10) + 20, -20);
+        confetti.position.set((Math.random() - 0.5) * 100, (Math.random() * 10) + 20, -20);
         confetti.velocity = new THREE.Vector3(0, -10, 0);
 
         confetti.initialRotation = new THREE.Vector3(
